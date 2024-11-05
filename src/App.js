@@ -6,8 +6,8 @@ function App() {
     const [numbers, setNumbers] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const generateApiEndpoint = 'https://oxhgmmkrpl.execute-api.ap-northeast-1.amazonaws.com/prod';
-    const fetchApiEndpoint = 'https://ngob51gzc5.execute-api.ap-northeast-1.amazonaws.com/prod';
+    const generateApiEndpoint = 'https://ngob51gzc5.execute-api.ap-northeast-1.amazonaws.com/prod';
+    const fetchApiEndpoint = 'https://oxhgmmkrpl.execute-api.ap-northeast-1.amazonaws.com/prod';    
 
     // 乱数生成のリクエストをAPIに送信する
     const handleGenerateRandomNumber = async () => {
