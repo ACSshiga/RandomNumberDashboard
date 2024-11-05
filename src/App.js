@@ -6,52 +6,36 @@ function App() {
     const [numbers, setNumbers] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // DynamoDBから最新の10件のデータを取得する関数
-    const fetchNumbers = async () => {
-        try {
-            const response = await fetch('https://oxhgmmkrpl.execute-api.ap-northeast-1.amazonaws.com/prod/randomnumbers');
-            const data = await response.json();
-            const items = JSON.parse(data.body);  // APIからのレスポンスをJSONに変換
-            setNumbers(items);  // 最新のデータを状態に設定
-        } catch (error) {
-            console.error("Error fetching random numbers:", error);
-        }
-    };
+    const apiEndpoint = 'https://<api-id>.execute-api.<リージョン>.amazonaws.com/prod/generate';
 
-    // ボタンを押すと乱数生成リクエストを送信
     const handleGenerateRandomNumber = async () => {
         setLoading(true);
         try {
-            await fetch('https://oxhgmmkrpl.execute-api.ap-northeast-1.amazonaws.com/prod/generateRandomNumber', {
+            const response = await fetch(apiEndpoint, {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
-            // 乱数が生成された後にデータを取得して画面を更新
-            fetchNumbers();
-        } catch (error) {
-            console.error("Error generating random number:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
 
-    // 初期表示でDynamoDBのデータを取得
-    useEffect(() => {
-        fetchNumbers();
-    }, []);
+            if (response.ok) {
+                console.log('Random number generation triggered successfully.');
+            } else {
+                console.error('Failed to trigger random number generation.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+        setLoading(false);
+    };
 
     return (
         <div className="App">
             <h1>生成された乱数（最新10件）</h1>
             <button onClick={handleGenerateRandomNumber} disabled={loading}>
-                {loading ? '生成中...' : '乱数を生成'}
+                {loading ? "生成中..." : "乱数を生成"}
             </button>
-            <ul>
-                {numbers.map((item, index) => (
-                    <li key={index}>
-                        Timestamp: {item.Timestamp}, Value: {parseFloat(item.RandomValue)}
-                    </li>
-                ))}
-            </ul>
+            {/* 最新10件のデータを表示する */}
         </div>
     );
 }
